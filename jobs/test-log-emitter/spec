@@ -1,0 +1,26 @@
+---
+name: test-log-emitter
+
+templates:
+  emitter_config.yml.erb:            config/emitter_config.yml
+  test-log-emitter_ctl.erb:          bin/test-log-emitter_ctl
+
+packages:
+- test-log-emitter
+
+properties:
+  listen_port:
+    description: "Port the tlog emitter listens to"
+    default: 9999
+
+  loggregator.ca:
+    default: /var/vcap/jobs/rep/config/certs/loggregator/ca.crt
+
+  loggregator.cert:
+    default: /var/vcap/jobs/rep/config/certs/loggregator/client.crt
+
+  loggregator.key:
+    default: /var/vcap/jobs/rep/config/certs/loggregator/client.key
+
+  loggregator.port:
+    default: 3458

@@ -1,0 +1,5 @@
+check process test-log-emitter
+  with pidfile /var/vcap/sys/run/test-log-emitter/test-log-emitter.pid
+  start program "/bin/sh -c '/var/vcap/jobs/test-log-emitter/bin/test-log-emitter_ctl start'" with timeout 120 seconds
+  stop program "/var/vcap/jobs/test-log-emitter/bin/test-log-emitter_ctl stop"
+  group vcap

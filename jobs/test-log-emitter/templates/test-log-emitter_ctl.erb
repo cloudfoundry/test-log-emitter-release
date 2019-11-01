@@ -1,0 +1,36 @@
+#!/bin/bash -eu
+
+export RUN_DIR=/var/vcap/sys/run/test-log-emitter
+export LOG_DIR=/var/vcap/sys/log/test-log-emitter
+export PIDFILE="${RUN_DIR}"/test-log-emitter.pid
+
+mkdir -p "${RUN_DIR}"
+mkdir -p "${LOG_DIR}"
+
+exec 1>> "${LOG_DIR}"/test-log-emitter_ctl.out.log
+exec 2>> "${LOG_DIR}"/test-log-emitter_ctl.err.log
+
+case $1 in
+
+  start)
+    chown -R vcap:vcap "${RUN_DIR}"
+    chown -R vcap:vcap "${LOG_DIR}"
+
+    echo $$ > $PIDFILE
+
+    exec /var/vcap/packages/test-log-emitter/bin/test-log-emitter \
+      --config /var/vcap/jobs/test-log-emitter/config/emitter_config.yml
+    ;;
+
+  stop)
+
+    kill -TERM "$(cat $PIDFILE)"
+
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+
+    ;;
+
+esac

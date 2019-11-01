@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# shellcheck source=../../src/build/bosh-go.bash
+source build/bosh-go.bash
+
+cd ./test-log-emitter
+
+go build -mod vendor -o "${BOSH_INSTALL_TARGET}/bin/test-log-emitter" .
