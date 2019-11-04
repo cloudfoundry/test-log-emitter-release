@@ -41,9 +41,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	emitter := emitters.NewSpikeEmitter(loggregatorClient)
 
 	http.HandleFunc("/", ping)
-	http.HandleFunc("/spike", emitSpike(emitters.NewSpikeEmitter(loggregatorClient)))
+	http.HandleFunc("/spike", http.HandlerFunc(emitter.EmitSpike("spike")))
+	http.HandleFunc("/spike", NewSpikeHandler("spike"))
+	http.HandleFunc("/spoke", emitSpoke(emitters.NewSpikeEmitter(loggregatorClient)))
 
 	fmt.Printf("Starting cpu usage logger on port %d...", conf.ListenPort)
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", conf.ListenPort), nil); err != nil {
@@ -61,7 +64,7 @@ func ping(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func emitSpike(emitter *emitters.SpikeEmitter) func(w http.ResponseWriter, r *http.Request) {
+func emitSpoke(emitter *emitters.SpikeEmitter) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
 			http.Error(w, "Sorry, only POST methods are supported.", http.StatusMethodNotAllowed)
@@ -87,6 +90,6 @@ func emitSpike(emitter *emitters.SpikeEmitter) func(w http.ResponseWriter, r *ht
 			return
 		}
 
-		emitter.Emit(spike)
+		emitter.EmitSpoke(spike)
 	}
 }
