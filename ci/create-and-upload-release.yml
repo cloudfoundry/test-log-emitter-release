@@ -13,5 +13,5 @@ params:
   PASSWORD:
   CA_CERT:
 run:
-  path: garden-ci/ci/scripts/create-log-emitter-release.sh
+  path: test-log-emitter-release/ci/create-log-emitter-release.sh
 
