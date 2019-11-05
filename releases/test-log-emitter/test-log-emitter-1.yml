@@ -1,0 +1,23 @@
+name: test-log-emitter
+version: "1"
+commit_hash: 479afa6
+uncommitted_changes: false
+jobs:
+- name: test-log-emitter
+  version: 5612fca12e1158ac7c5489bd7ffc97881ca2c015c6e17dbb5443347779bc9ff9
+  fingerprint: 5612fca12e1158ac7c5489bd7ffc97881ca2c015c6e17dbb5443347779bc9ff9
+  sha1: sha256:c1f48a53d758c71872a30c058c360a0dc18996c8568c3bf7954406e6161a1758
+  packages:
+  - test-log-emitter
+packages:
+- name: golang
+  version: bf8c5691aac04d767ce32c52d9bbf18551c171fc88355b7e0b9dc4083fbd53db
+  fingerprint: bf8c5691aac04d767ce32c52d9bbf18551c171fc88355b7e0b9dc4083fbd53db
+  sha1: sha256:91d760e8fe3a2801b005d1afcf4fa01b36707a95528537b5895bbc71397ede36
+  dependencies: []
+- name: test-log-emitter
+  version: 05f3cfebf44747ebaf84c4ee1886bba083e72d7bfa580c921d28da720120e715
+  fingerprint: 05f3cfebf44747ebaf84c4ee1886bba083e72d7bfa580c921d28da720120e715
+  sha1: sha256:1fa0bfe43d5d0feca791d0e4945ac8f38016322dca514ff13299e6985a96ee4f
+  dependencies:
+  - golang
