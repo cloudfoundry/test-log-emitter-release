@@ -12,5 +12,5 @@ params:
   PASSWORD:
   CA_CERT:
 run:
-  path: test-log-emitter-release/ci/create-log-emitter-release.sh
+  path: test-log-emitter-release/ci/create-and-upload-release.sh
 
