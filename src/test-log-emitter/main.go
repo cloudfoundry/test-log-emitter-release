@@ -43,8 +43,7 @@ func main() {
 	emitter := emitters.NewSpikeEmitter(loggregatorClient)
 
 	http.HandleFunc("/", ping)
-	http.Handle("/spike", emitter.EmitSpike())
-	http.Handle("/spoke", emitter.EmitBadSpike())
+	http.Handle("/gauge", emitter.EmitGauge())
 
 	fmt.Printf("Starting cpu usage logger on port %d...", conf.ListenPort)
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", conf.ListenPort), nil); err != nil {
