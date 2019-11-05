@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -44,9 +43,8 @@ func main() {
 	emitter := emitters.NewSpikeEmitter(loggregatorClient)
 
 	http.HandleFunc("/", ping)
-	http.HandleFunc("/spike", http.HandlerFunc(emitter.EmitSpike("spike")))
-	http.HandleFunc("/spike", NewSpikeHandler("spike"))
-	http.HandleFunc("/spoke", emitSpoke(emitters.NewSpikeEmitter(loggregatorClient)))
+	http.Handle("/spike", emitter.EmitSpike())
+	http.Handle("/spoke", emitter.EmitBadSpike())
 
 	fmt.Printf("Starting cpu usage logger on port %d...", conf.ListenPort)
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", conf.ListenPort), nil); err != nil {
@@ -61,35 +59,5 @@ func ping(w http.ResponseWriter, r *http.Request) {
 	if _, err := io.WriteString(w, message); err != nil {
 		http.Error(w, fmt.Sprintf("Failed to resond to ping request: %v", err), http.StatusInternalServerError)
 		return
-	}
-}
-
-func emitSpoke(emitter *emitters.SpikeEmitter) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "POST" {
-			http.Error(w, "Sorry, only POST methods are supported.", http.StatusMethodNotAllowed)
-			return
-		}
-
-		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Failed to read body: %v", err), http.StatusInternalServerError)
-			return
-		}
-		defer r.Body.Close()
-
-		reqMap := map[string]string{}
-		if err := json.Unmarshal(body, &reqMap); err != nil {
-			http.Error(w, fmt.Sprintf("Failed to unmarshal body: %v", err), http.StatusInternalServerError)
-			return
-		}
-
-		spike, err := emitters.ParseSpike(reqMap)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Failed to parse spike: %v", err), http.StatusInternalServerError)
-			return
-		}
-
-		emitter.EmitSpoke(spike)
 	}
 }

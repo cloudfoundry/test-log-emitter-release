@@ -10,18 +10,18 @@ import (
 	"code.cloudfoundry.org/go-loggregator"
 )
 
-type GaugeValue struct {
-	Name  string  `json:"name"`
-	Value float64 `json:"value"`
-	Unit  string  `json:"unit"`
-}
+// type GaugeValue struct {
+// 	Name  string  `json:"name"`
+// 	Value float64 `json:"value"`
+// 	Unit  string  `json:"unit"`
+// }
 
-type GaugeMetric struct {
-	SourceId   string
-	InstanceId string
-	Tags       map[string]string
-	Values     []GaugeValue
-}
+// type GaugeMetric struct {
+// 	SourceId   string
+// 	InstanceId string
+// 	Tags       map[string]string
+// 	Values     []GaugeValue
+// }
 
 type Spike struct {
 	SourceId          string
@@ -84,7 +84,7 @@ func (e SpikeEmitter) EmitSpoke(spike *Spike) {
 	)
 }
 
-func (e SpikeEmitter) EmitSpike(spikeType string) func(w http.ResponseWriter, r *http.Request) {
+func (e SpikeEmitter) EmitSpike() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
 			http.Error(w, "Sorry, only POST methods are supported.", http.StatusMethodNotAllowed)
@@ -111,5 +111,35 @@ func (e SpikeEmitter) EmitSpike(spikeType string) func(w http.ResponseWriter, r 
 		}
 
 		e.Emit(spike)
+	}
+}
+
+func (e SpikeEmitter) EmitBadSpike() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			http.Error(w, "Sorry, only POST methods are supported.", http.StatusMethodNotAllowed)
+			return
+		}
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Failed to read body: %v", err), http.StatusInternalServerError)
+			return
+		}
+		defer r.Body.Close()
+
+		reqMap := map[string]string{}
+		if err := json.Unmarshal(body, &reqMap); err != nil {
+			http.Error(w, fmt.Sprintf("Failed to unmarshal body: %v", err), http.StatusInternalServerError)
+			return
+		}
+
+		spike, err := ParseSpike(reqMap)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Failed to parse spike: %v", err), http.StatusInternalServerError)
+			return
+		}
+
+		e.EmitSpoke(spike)
 	}
 }

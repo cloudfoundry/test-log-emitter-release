@@ -1,1 +1,7 @@
+---
 name: test-log-emitter
+blobstore:
+  provider: s3
+  options:
+    bucket_name: test-log-emitter
+    # see lastpass 'CI AWS S3 bucket'
