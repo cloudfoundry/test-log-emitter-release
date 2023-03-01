@@ -1,8 +1,8 @@
 ---
 name: test-log-emitter
 
-dependencies: [golang]
+dependencies:
+  - golang-1-linux
 
 files:
-- 'test-log-emitter/**/*'
-- 'build/bosh-go.bash'
+- test-log-emitter/**/*

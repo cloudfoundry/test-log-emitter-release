@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -e -x
 
-# shellcheck source=../../src/build/bosh-go.bash
-source build/bosh-go.bash
+mkdir -p ${BOSH_INSTALL_TARGET}/src
+mv * ${BOSH_INSTALL_TARGET}/src
+mv ${BOSH_INSTALL_TARGET}/src .
 
-cd ./test-log-emitter
+source /var/vcap/packages/golang-1-linux/bosh/compile.env
 
-go build -mod vendor -o "${BOSH_INSTALL_TARGET}/bin/test-log-emitter" .
+pushd src/test-log-emitter
+go build -o "${BOSH_INSTALL_TARGET}/test-log-emitter" .
+popd

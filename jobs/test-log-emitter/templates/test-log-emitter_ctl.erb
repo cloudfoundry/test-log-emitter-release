@@ -18,7 +18,7 @@ case $1 in
 
     echo $$ > $PIDFILE
 
-    exec /var/vcap/packages/test-log-emitter/bin/test-log-emitter \
+    exec /var/vcap/packages/test-log-emitter/test-log-emitter \
       --config /var/vcap/jobs/test-log-emitter/config/emitter_config.yml
     ;;
 
