@@ -1,7 +1,7 @@
 ---
 name: test-log-emitter
 blobstore:
-  provider: s3
+  provider: gcs
   options:
-    bucket_name: test-log-emitter
+    bucket_name: test-log-emitter-blobs
     # see lastpass 'CI AWS S3 bucket'
