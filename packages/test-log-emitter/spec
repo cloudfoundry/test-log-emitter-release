@@ -2,7 +2,7 @@
 name: test-log-emitter
 
 dependencies:
-  - golang-1-linux
+  - golang-1.21-linux
 
 files:
 - test-log-emitter/**/*
